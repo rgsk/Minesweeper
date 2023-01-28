@@ -143,7 +143,7 @@ public class Game : MonoBehaviour {
                     FloodFillAndMarkAsRevealedEmptyCells(x - 1, y);
                     FloodFillAndMarkAsRevealedEmptyCells(x + 1, y);
                     FloodFillAndMarkAsRevealedEmptyCells(x, y + 1);
-                    FloodFillAndMarkAsRevealedEmptyCells(x, y);
+                    FloodFillAndMarkAsRevealedEmptyCells(x, y - 1);
                 }
             }
         }
