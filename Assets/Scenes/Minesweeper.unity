@@ -178,22 +178,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 459543769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae908c6586704a16b3103eb114e1a49, type: 3}
+  m_Script: {fileID: 11500000, guid: 348d1817b127c4e518ed9cad9bac4274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileUnknown: {fileID: 11400000, guid: 742f0bf9f67494435b7378924aab6b84, type: 2}
-  tileEmpty: {fileID: 11400000, guid: cc8918da73c24437099ccb663496560a, type: 2}
-  tileMine: {fileID: 11400000, guid: a6ee1d08eac8846f0b46f5a45362937e, type: 2}
-  tileExploded: {fileID: 11400000, guid: c0fe33698948c411bbd88cbb0c09c706, type: 2}
-  tileFlag: {fileID: 11400000, guid: 3020fc3b264ac48abb0ae84d7a028809, type: 2}
-  tileNum1: {fileID: 11400000, guid: 4cff55e5ce75c41da856dbbce3d0ec66, type: 2}
-  tileNum2: {fileID: 11400000, guid: 68cf681df7daf4a8590cb7d679813a5c, type: 2}
-  tileNum3: {fileID: 11400000, guid: 8663a144549a247e3be3f86d00938a0e, type: 2}
-  tileNum4: {fileID: 11400000, guid: 54994592645664f019444a179d7bf757, type: 2}
-  tileNum5: {fileID: 11400000, guid: dc26f086fa53e44408dba031c21766dd, type: 2}
-  tileNum6: {fileID: 11400000, guid: ff80466d951f946caa9e0da6caba9789, type: 2}
-  tileNum7: {fileID: 11400000, guid: b2f65217fa8b14dbf945e44e0b59e1b4, type: 2}
-  tileNum8: {fileID: 11400000, guid: 75251cbf38bc841d489f1f741ce37902, type: 2}
+  width: 16
+  height: 16
+  mineCount: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,6 +279,7 @@ GameObject:
   - component: {fileID: 672896072}
   - component: {fileID: 672896074}
   - component: {fileID: 672896073}
+  - component: {fileID: 672896075}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -398,3 +389,28 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &672896075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672896071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae908c6586704a16b3103eb114e1a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileUnknown: {fileID: 11400000, guid: 742f0bf9f67494435b7378924aab6b84, type: 2}
+  tileEmpty: {fileID: 11400000, guid: cc8918da73c24437099ccb663496560a, type: 2}
+  tileMine: {fileID: 11400000, guid: a6ee1d08eac8846f0b46f5a45362937e, type: 2}
+  tileExploded: {fileID: 11400000, guid: c0fe33698948c411bbd88cbb0c09c706, type: 2}
+  tileFlag: {fileID: 11400000, guid: 3020fc3b264ac48abb0ae84d7a028809, type: 2}
+  tileNum1: {fileID: 11400000, guid: 4cff55e5ce75c41da856dbbce3d0ec66, type: 2}
+  tileNum2: {fileID: 11400000, guid: 68cf681df7daf4a8590cb7d679813a5c, type: 2}
+  tileNum3: {fileID: 11400000, guid: 8663a144549a247e3be3f86d00938a0e, type: 2}
+  tileNum4: {fileID: 11400000, guid: 54994592645664f019444a179d7bf757, type: 2}
+  tileNum5: {fileID: 11400000, guid: dc26f086fa53e44408dba031c21766dd, type: 2}
+  tileNum6: {fileID: 11400000, guid: ff80466d951f946caa9e0da6caba9789, type: 2}
+  tileNum7: {fileID: 11400000, guid: b2f65217fa8b14dbf945e44e0b59e1b4, type: 2}
+  tileNum8: {fileID: 11400000, guid: 75251cbf38bc841d489f1f741ce37902, type: 2}

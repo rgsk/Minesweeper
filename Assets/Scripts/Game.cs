@@ -5,6 +5,7 @@ public class Game : MonoBehaviour {
     public int mineCount = 32;
     private Board board;
     private Cell[,] state;
+    private bool gameRunning = false;
     private void Awake() {
         board = GetComponentInChildren<Board>();
     }
@@ -13,15 +14,22 @@ public class Game : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            // left click
-            Reveal();
+        if (Input.GetKeyDown(KeyCode.R)) {
+            NewGame();
         }
 
-        if (Input.GetMouseButtonDown(1)) {
-            // right click
-            Flag();
+        if (gameRunning) {
+            if (Input.GetMouseButtonDown(0)) {
+                // left click
+                Reveal();
+            }
+
+            if (Input.GetMouseButtonDown(1)) {
+                // right click
+                Flag();
+            }
         }
+
     }
     private void NewGame() {
         state = new Cell[width, height];
@@ -32,6 +40,7 @@ public class Game : MonoBehaviour {
         Camera.main.transform.position = new Vector3(width / 2f, height / 2f, -10f);
         Camera.main.orthographicSize = Mathf.Max(width, height);
         board.Draw(state);
+        gameRunning = true;
     }
     private void GenerateCells() {
         for (int x = 0; x < width; x++) {
@@ -118,17 +127,45 @@ public class Game : MonoBehaviour {
         if (IsValidCoordinates(x, y)) {
             var cell = state[x, y];
             if (!cell.revealed && !cell.flagged) {
-                if (cell.type == Cell.Type.Empty) {
-                    FloodFillAndMarkAsRevealedEmptyCells(x, y);
-                    board.Draw(state);
-                } else {
-                    cell.revealed = true;
-                    state[x, y] = cell;
-                    board.Draw(state);
+                switch (cell.type) {
+                    case Cell.Type.Empty: {
+                            FloodFillAndMarkAsRevealedEmptyCells(x, y);
+                            CheckWinCondition();
+                            break;
+                        }
+                    case Cell.Type.Mine: {
+                            Explode(cell);
+                            break;
+                        }
+                    case Cell.Type.Number: {
+                            cell.revealed = true;
+                            state[x, y] = cell;
+                            CheckWinCondition();
+                            break;
+                        }
                 }
-
+                board.Draw(state);
             }
         }
+    }
+
+    private void Explode(Cell cell) {
+        cell.revealed = true;
+        cell.exploded = true;
+        state[cell.position.x, cell.position.y] = cell;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (state[x, y].type == Cell.Type.Mine) {
+                    state[x, y].revealed = true;
+                }
+            }
+        }
+        OnLoss();
+    }
+
+    private void OnLoss() {
+        Debug.Log("You Lost!");
+        gameRunning = false;
     }
 
     private void FloodFillAndMarkAsRevealedEmptyCells(int x, int y) {
@@ -144,6 +181,30 @@ public class Game : MonoBehaviour {
                     FloodFillAndMarkAsRevealedEmptyCells(x + 1, y);
                     FloodFillAndMarkAsRevealedEmptyCells(x, y + 1);
                     FloodFillAndMarkAsRevealedEmptyCells(x, y - 1);
+                }
+            }
+        }
+    }
+
+    private void CheckWinCondition() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                var cell = state[x, y];
+                if (cell.type != Cell.Type.Mine && !cell.revealed) {
+                    return;
+                }
+            }
+        }
+        OnWin();
+    }
+
+    private void OnWin() {
+        Debug.Log("You Won!");
+        gameRunning = false;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (state[x, y].type == Cell.Type.Mine) {
+                    state[x, y].flagged = true;
                 }
             }
         }
