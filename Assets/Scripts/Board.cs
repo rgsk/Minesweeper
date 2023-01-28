@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
-public class Board : MonoBehaviour
-{
+public class Board : MonoBehaviour {
     public Tilemap tilemap { get; private set; }
     public Tile tileUnknown;
     public Tile tileEmpty;
@@ -16,53 +15,39 @@ public class Board : MonoBehaviour
     public Tile tileNum6;
     public Tile tileNum7;
     public Tile tileNum8;
-    private void Awake()
-    {
+    private void Awake() {
         tilemap = GetComponent<Tilemap>();
     }
-    public void Draw(Cell[,] state)
-    {
+    public void Draw(Cell[,] state) {
         int width = state.GetLength(0);
         int height = state.GetLength(1);
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 Cell cell = state[x, y];
                 tilemap.SetTile(cell.position, GetTile(cell));
             }
         }
     }
-    private Tile GetTile(Cell cell)
-    {
-        if (cell.revealed)
-        {
+    private Tile GetTile(Cell cell) {
+        if (cell.revealed) {
             return GetRevealedTile(cell);
-        }
-        else if (cell.flagged)
-        {
+        } else if (cell.flagged) {
             return tileFlag;
-        }
-        else
-        {
+        } else {
             return tileUnknown;
         }
     }
 
-    private Tile GetRevealedTile(Cell cell)
-    {
-        switch (cell.type)
-        {
+    private Tile GetRevealedTile(Cell cell) {
+        switch (cell.type) {
             case Cell.Type.Empty: return tileEmpty;
             case Cell.Type.Mine: return tileMine;
             case Cell.Type.Number: return GetNumberTile(cell);
             default: return null; // just for typesaftey since all the cases are covered
         }
     }
-    private Tile GetNumberTile(Cell cell)
-    {
-        switch (cell.number)
-        {
+    private Tile GetNumberTile(Cell cell) {
+        switch (cell.number) {
             case 1: return tileNum1;
             case 2: return tileNum2;
             case 3: return tileNum3;
