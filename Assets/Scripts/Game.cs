@@ -3,6 +3,8 @@ public class Game : MonoBehaviour {
     public int width = 16;
     public int height = 16;
     public int mineCount = 32;
+
+    public int randomRevealsAtStart = 4;
     private Board board;
     private Cell[,] state;
     private bool gameRunning = false;
@@ -26,7 +28,7 @@ public class Game : MonoBehaviour {
         if (gameRunning) {
             if (Input.GetMouseButtonDown(0)) {
                 // left click
-                Reveal();
+                HandleRevealByUser();
             }
 
             if (Input.GetMouseButtonDown(1)) {
@@ -45,8 +47,16 @@ public class Game : MonoBehaviour {
         Camera.main.transform.position = new Vector3(width / 2f, height / 2f, -10f);
         Camera.main.orthographicSize = Mathf.Max(width, height);
         board.Draw(state);
-        gameRunning = true;
+        Invoke("RunGame", 1);
     }
+
+    private void RunGame() {
+        RevealRandomly();
+        board.Draw(state);
+        gameRunning = true;
+        Debug.Log("Please Start Playing!");
+    }
+
     private void GenerateCells() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -84,6 +94,18 @@ public class Game : MonoBehaviour {
                     state[x, y] = cell;
                 }
             }
+        }
+    }
+
+    private void RevealRandomly() {
+        for (int i = 0; i < randomRevealsAtStart; i++) {
+            int x;
+            int y;
+            do {
+                x = Random.Range(0, width);
+                y = Random.Range(0, height);
+            } while (state[x, y].type == Cell.Type.Mine);
+            Reveal(x, y);
         }
     }
     private int CountMines(int cellX, int cellY) {
@@ -125,31 +147,35 @@ public class Game : MonoBehaviour {
     }
 
 
-    private void Reveal() {
+    private void HandleRevealByUser() {
         var cellPositon = GetCellPosition();
         int x = cellPositon.x;
         int y = cellPositon.y;
         if (IsValidCoordinates(x, y)) {
-            var cell = state[x, y];
-            if (!cell.revealed && !cell.flagged) {
-                switch (cell.type) {
-                    case Cell.Type.Empty: {
-                            FloodFillAndMarkAsRevealedEmptyCells(x, y);
-                            CheckWinCondition();
-                            break;
-                        }
-                    case Cell.Type.Mine: {
-                            Explode(cell);
-                            break;
-                        }
-                    case Cell.Type.Number: {
-                            cell.revealed = true;
-                            state[x, y] = cell;
-                            CheckWinCondition();
-                            break;
-                        }
-                }
-                board.Draw(state);
+            Reveal(x, y);
+            board.Draw(state);
+        }
+    }
+
+    private void Reveal(int x, int y) {
+        var cell = state[x, y];
+        if (!cell.revealed && !cell.flagged) {
+            switch (cell.type) {
+                case Cell.Type.Empty: {
+                        FloodFillAndMarkAsRevealedEmptyCells(x, y);
+                        CheckWinCondition();
+                        break;
+                    }
+                case Cell.Type.Mine: {
+                        Explode(cell);
+                        break;
+                    }
+                case Cell.Type.Number: {
+                        cell.revealed = true;
+                        state[x, y] = cell;
+                        CheckWinCondition();
+                        break;
+                    }
             }
         }
     }
