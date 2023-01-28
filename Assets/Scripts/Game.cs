@@ -134,14 +134,17 @@ public class Game : MonoBehaviour {
     private void FloodFillAndMarkAsRevealedEmptyCells(int x, int y) {
         if (IsValidCoordinates(x, y)) {
             var cell = state[x, y];
-            if (cell.type == Cell.Type.Empty && !cell.revealed) {
+            if (cell.type != Cell.Type.Mine && !cell.revealed) {
+                // reveal for both Cell.Type.Number and Cell.Type.Empty
                 cell.revealed = true;
                 state[x, y] = cell;
-                // call for adjacent cells 
-                FloodFillAndMarkAsRevealedEmptyCells(x - 1, y);
-                FloodFillAndMarkAsRevealedEmptyCells(x + 1, y);
-                FloodFillAndMarkAsRevealedEmptyCells(x, y + 1);
-                FloodFillAndMarkAsRevealedEmptyCells(x, y - 1);
+                // flood for adjacent cells only if cell was empty 
+                if (cell.type == Cell.Type.Empty) {
+                    FloodFillAndMarkAsRevealedEmptyCells(x - 1, y);
+                    FloodFillAndMarkAsRevealedEmptyCells(x + 1, y);
+                    FloodFillAndMarkAsRevealedEmptyCells(x, y + 1);
+                    FloodFillAndMarkAsRevealedEmptyCells(x, y);
+                }
             }
         }
     }
