@@ -11,6 +11,18 @@ public class Game : MonoBehaviour {
     private void Start() {
         NewGame();
     }
+
+    private void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            // left click
+            Reveal();
+        }
+
+        if (Input.GetMouseButtonDown(1)) {
+            // right click
+            Flag();
+        }
+    }
     private void NewGame() {
         state = new Cell[width, height];
         GenerateCells();
@@ -67,7 +79,7 @@ public class Game : MonoBehaviour {
                 if (offsetX == 0 && offsetY == 0) continue;
                 int x = cellX + offsetX;
                 int y = cellY + offsetY;
-                if (x >= 0 && y >= 0 && x < width && y < height) {
+                if (IsValidCoordinates(x, y)) {
                     if (state[x, y].type == Cell.Type.Mine) {
                         count++;
                     }
@@ -82,5 +94,43 @@ public class Game : MonoBehaviour {
                 state[x, y].revealed = true;
             }
         }
+    }
+
+    private void Flag() {
+        var cellPositon = GetCellPosition();
+        int x = cellPositon.x;
+        int y = cellPositon.y;
+        if (IsValidCoordinates(x, y)) {
+            var cell = state[x, y];
+            if (!cell.revealed) {
+                cell.flagged = !cell.flagged;
+                state[x, y] = cell;
+                board.Draw(state);
+            }
+        }
+    }
+
+
+    private void Reveal() {
+        var cellPositon = GetCellPosition();
+        int x = cellPositon.x;
+        int y = cellPositon.y;
+        if (IsValidCoordinates(x, y)) {
+            var cell = state[x, y];
+            if (!cell.revealed && !cell.flagged) {
+                cell.revealed = true;
+                state[x, y] = cell;
+                board.Draw(state);
+            }
+        }
+    }
+
+    private Vector3Int GetCellPosition() {
+        var worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var cellPositon = board.tilemap.WorldToCell(worldPosition);
+        return cellPositon;
+    }
+    private bool IsValidCoordinates(int x, int y) {
+        return x >= 0 && y >= 0 && x < width && y < height;
     }
 }
