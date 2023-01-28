@@ -6,6 +6,11 @@ public class Game : MonoBehaviour {
     private Board board;
     private Cell[,] state;
     private bool gameRunning = false;
+
+    private void OnValidate() {
+        mineCount = Mathf.Clamp(mineCount, 0, width * height);
+    }
+
     private void Awake() {
         board = GetComponentInChildren<Board>();
     }
